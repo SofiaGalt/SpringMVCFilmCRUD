@@ -30,11 +30,11 @@
 				<label for="title">Title:</label> <input type="text" name="title">
 				<label for="description">Description:</label> <input type="text"name="description">
 				<label for=releaseYear>Release Year:</label> <input type="number" name="releaseYear"> 
-				<label for="languageId">Language ID:</label> <input type="text"name="languageId"> 
-				<label for="rentalDuration">Rental Duration:</label> <input type="text" name="rentalDuration">
-				<label for="rentalRate">Rental Rate:</label> <input type="text" name="rentalRate">
-				<label for="length">Length:</label> <input type="text" name="length"> 
-				<label for="replacementCost">Replacement Cost:</label> <input type="text" name="replacementCost"> 
+				<label for="languageId">Language ID:</label> <input type="number"name="languageId"> 
+				<label for="rentalDuration">Rental Duration:</label> <input type="number" name="rentalDuration">
+				<label for="rentalRate">Rental Rate:</label> <input type="number" name="rentalRate">
+				<label for="length">Length:</label> <input type="number" name="length"> 
+				<label for="replacementCost">Replacement Cost:</label> <input type="number" name="replacementCost"> 
 				<label for="rating">Rating:</label> <input type="text" name="rating">
 				<label for="specialFeatures">Special Features:</label> <input type="text" name="specialFeatures"> 
 				<input type="submit" value="Search">
