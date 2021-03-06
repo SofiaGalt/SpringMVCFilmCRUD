@@ -39,7 +39,6 @@ public class FilmController {
 		ModelAndView mv = new ModelAndView();	
 //		String integerId = new Integer(id);
 		List<Film> film = filmdao.findFilmByKeyword(kw);
-		System.out.println(film);
 		if(film==null) {
 			mv.setViewName("WEB-INF/views/NoResults.jsp");
 			return mv;		}
