@@ -176,8 +176,32 @@ public class Film {
 		return "" + rating;
 	}
 
-	public void setRating(Rating rating) {
-		this.rating = rating;
+	public void setRating(String rating) {
+		
+		rating.toUpperCase();
+		
+		switch(rating) {
+			case "G":
+				this.rating = Rating.G;
+				break;
+			case "PG":
+				this.rating = Rating.PG;
+				break;
+			case "PG13":
+			case "PG-13":
+			case "PG 13":
+				this.rating = Rating.PG13;
+				break;
+			case "R":
+				this.rating = Rating.R;
+				break;
+			case "NC17":
+			case "NC-17":
+			case "NC 17":
+				this.rating = Rating.NC17;
+				break;
+		}
+		
 	}
 
 	public String getSpecialFeatures() {

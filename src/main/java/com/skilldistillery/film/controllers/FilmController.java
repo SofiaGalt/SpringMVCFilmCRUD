@@ -16,34 +16,56 @@ import com.skilldistillery.film.entities.Film;
 public class FilmController {
 
 	@Autowired
-	private  FilmDAO filmdao;
-	
-	@RequestMapping(path= {"/", "home.do"})
+	private FilmDAO filmdao;
+
+	@RequestMapping(path = { "/", "home.do" })
 	public String home() {
 		return "WEB-INF/views/index.jsp";
 	}
-	@RequestMapping(path= {"findFilmById.do"}, method= RequestMethod.GET)
-	public ModelAndView findFilmById(@RequestParam("id")String id) {
-		ModelAndView mv = new ModelAndView();	
+
+	@RequestMapping(path = { "findFilmById.do" }, method = RequestMethod.GET)
+	public ModelAndView findFilmById(@RequestParam("id") String id) {
+		ModelAndView mv = new ModelAndView();
 		Integer integerId = new Integer(id);
 		Film film = filmdao.findFilmById(integerId);
-		if(film==null) {
+		if (film == null) {
 			mv.setViewName("WEB-INF/views/NoResults.jsp");
-			return mv;		}
+			return mv;
+		}
 		mv.addObject("film", film);
-		 mv.setViewName("WEB-INF/views/results.jsp");
+		mv.setViewName("WEB-INF/views/results.jsp");
 		return mv;
 	}
-	@RequestMapping(path= {"findFilmByKeyword.do"}, method= RequestMethod.GET)
-	public ModelAndView findFilmByKeyword(@RequestParam("kw")String kw) {
-		ModelAndView mv = new ModelAndView();	
-//		String integerId = new Integer(id);
+
+	@RequestMapping(path = { "findFilmByKeyword.do" }, method = RequestMethod.GET)
+	public ModelAndView findFilmByKeyword(@RequestParam("kw") String kw) {
+		ModelAndView mv = new ModelAndView();
 		List<Film> film = filmdao.findFilmByKeyword(kw);
-		if(film==null) {
+		if (film == null) {
+			mv.addObject("message", "We weren't able to find any movies matching your request.  Maybe try fewer words or different phrases." );
 			mv.setViewName("WEB-INF/views/NoResults.jsp");
-			return mv;		}
+			return mv;
+		}
 		mv.addObject("film", film);
-		 mv.setViewName("WEB-INF/views/results.jsp");
+		mv.setViewName("WEB-INF/views/results.jsp");
+		return mv;
+	}
+	
+	@RequestMapping(path = { "addFilm.do" }, method = RequestMethod.GET)
+	public ModelAndView addFilm(Film film) {
+		
+		ModelAndView mv = new ModelAndView();
+		
+		Film f = filmdao.createFilm(film);
+		
+		if (f == null) {
+			mv.addObject("message", "Error: We weren't able to add your movie.  Popcorn on us?" );
+			mv.setViewName("WEB-INF/views/NoResults.jsp");
+			return mv;
+		}
+		
+		mv.addObject("film", film);
+		mv.setViewName("WEB-INF/views/results.jsp");
 		return mv;
 	}
 //	@RequestMap
