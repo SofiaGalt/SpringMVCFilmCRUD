@@ -1,5 +1,7 @@
 package com.skilldistillery.film.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,20 @@ public class FilmController {
 		 mv.setViewName("WEB-INF/views/results.jsp");
 		return mv;
 	}
+	@RequestMapping(path= {"findFilmByKeyword.do"}, method= RequestMethod.GET)
+	public ModelAndView findFilmByKeyword(@RequestParam("kw")String kw) {
+		ModelAndView mv = new ModelAndView();	
+//		String integerId = new Integer(id);
+		List<Film> film = filmdao.findFilmByKeyword(kw);
+		System.out.println(film);
+		if(film==null) {
+			mv.setViewName("WEB-INF/views/NoResults.jsp");
+			return mv;		}
+		mv.addObject("film", film);
+		 mv.setViewName("WEB-INF/views/results.jsp");
+		return mv;
+	}
+//	@RequestMap
 //	@RequestMapping("GetNumbers.do")
 //	  public ModelAndView getNumbers(@RequestParam(value="howmany", defaultValue="6") int count, HttpSession session) {
 //	    hopper.reset();
