@@ -22,7 +22,6 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 	private static final String URL = "jdbc:mysql://localhost:3306/sdvid?useSSL=false";
 	private static String user = "student";
 	private static String pass = "student";
-	private static Connection conn = null;
 
 	public FilmDAOJdbcImpl() {
 		
@@ -31,9 +30,8 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 	static {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection(URL, user, pass);
 
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
@@ -43,7 +41,7 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 
 		if (filmId < 1)
 			return null;
-		try {
+		try (Connection conn = DriverManager.getConnection(URL, user, pass)) {
 			String sql = "SELECT * FROM film join language on film.language_id = language.id where film.id = ?;";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, filmId);
@@ -70,7 +68,7 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 		if (actorId < 1)
 			return null;
 
-		try {
+		try (Connection conn = DriverManager.getConnection(URL, user, pass)) {
 			String sql = "SELECT * FROM actor where actor.id = ?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, actorId);
@@ -94,7 +92,7 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 		if (filmId < 1)
 			return null;
 
-		try {
+		try (Connection conn = DriverManager.getConnection(URL, user, pass)) {
 			String sql = "select * from film join film_actor on film.id = film_actor.film_id join actor on film_actor.actor_id = actor.id where film.id = ?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, filmId);
@@ -120,7 +118,7 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 
 		List<Film> filmsMatchedKeyword = new LinkedList<>();
 
-		try {
+		try (Connection conn = DriverManager.getConnection(URL, user, pass)) {
 			String sql = "select * from film join language on film.language_id = language.id where film.title like ? or film.description like ?;";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, "%" + keyword + "%");
@@ -175,14 +173,8 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 			}
 			conn.commit(); // COMMIT TRANSACTION
 		} catch (SQLException sqle) {
+			
 			sqle.printStackTrace();
-			if (conn != null) {
-				try {
-					conn.rollback();
-				} catch (SQLException sqle2) {
-					System.err.println("Error trying to rollback");
-				}
-			}
 			throw new RuntimeException("Error inserting actor " + actor);
 		}
 		return actor;
@@ -215,15 +207,8 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 				conn.commit(); // COMMIT TRANSACTION
 			}
 		} catch (SQLException sqle) {
+			
 			sqle.printStackTrace();
-			if (conn != null) {
-				try {
-					conn.rollback();
-				} // ROLLBACK TRANSACTION ON ERROR
-				catch (SQLException sqle2) {
-					System.err.println("Error trying to rollback");
-				}
-			}
 			return false;
 		}
 		return true;
@@ -244,14 +229,8 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 			updateCount = stmt.executeUpdate();
 			conn.commit(); // COMMIT TRANSACTION
 		} catch (SQLException sqle) {
+			
 			sqle.printStackTrace();
-			if (conn != null) {
-				try {
-					conn.rollback();
-				} catch (SQLException sqle2) {
-					System.err.println("Error trying to rollback");
-				}
-			}
 			return false;
 		}
 		return true;
@@ -291,14 +270,8 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 			}
 			conn.commit(); // COMMIT TRANSACTION
 		} catch (SQLException sqle) {
+			
 			sqle.printStackTrace();
-			if (conn != null) {
-				try {
-					conn.rollback();
-				} catch (SQLException sqle2) {
-					System.err.println("Error trying to rollback");
-				}
-			}
 			throw new RuntimeException("Error inserting film " + film);
 		}
 		return film;
@@ -337,15 +310,8 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 				conn.commit(); // COMMIT TRANSACTION
 			}
 		} catch (SQLException sqle) {
+			
 			sqle.printStackTrace();
-			if (conn != null) {
-				try {
-					conn.rollback();
-				} // ROLLBACK TRANSACTION ON ERROR
-				catch (SQLException sqle2) {
-					System.err.println("Error trying to rollback");
-				}
-			}
 			return false;
 		}
 		return true;
@@ -372,14 +338,8 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 			conn.commit(); // COMMIT TRANSACTION
 		
 		} catch (SQLException sqle) {
+			
 			sqle.printStackTrace();
-			if (conn != null) {
-				try {
-					conn.rollback();
-				} catch (SQLException sqle2) {
-					System.err.println("Error trying to rollback");
-				}
-			}
 			return false;
 		}
 		return true;
