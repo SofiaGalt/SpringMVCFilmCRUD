@@ -21,8 +21,8 @@
 <!-- Find by Party -->
 <div>
 	<h3>Search by :</h3>
-	<form action=searchKeyWord.do" method="get">
-	<label for="keyword">Keyword:</label> <input type="text" name="keyword">
+	<form action="findFilmByKeyword.do" method="get">
+	<label for="kw">Keyword:</label> <input type="text" name="kw">
 	<input type="submit" value="Search">
 	</form>
 </div>
