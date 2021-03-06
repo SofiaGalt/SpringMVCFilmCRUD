@@ -11,15 +11,20 @@
 <h1>My Film Site</h1>
 
 <div>
-	<h3>Search by Film ID:</h3>
+	<h3>Search by:</h3>
 	<form action="findFilmById.do" method="get">
 	<label for="filmId">Film ID:</label> <input type="text" name="id">
 	<input type="submit" value="Search">
 	</form>
+	
+	<form action="findFilmByKeyword.do" method="get">
+	<label for="kw">Keyword:</label> <input type="text" name="kw">
+	<input type="submit" value="Search">
+	</form>
+	
 </div>
 
 <div>
-<<<<<<< HEAD
 	<h3>Add new film:</h3>
 	<form action=searchKeyWord.do" method="get">
 	<label for="title">Title:</label> <input type="text" name="title">
@@ -32,13 +37,8 @@
 	<label for="replacementCost">Replacement Cost:</label> <input type="text" name="replacementCost">
 	<label for="rating">Rating:</label> <input type="text" name="rating">
 	<label for="specialFeatures">Special Features:</label> <input type="text" name="specialFeatures">
-=======
-	<h3>Search by :</h3>
-	<form action="findFilmByKeyword.do" method="get">
-	<label for="kw">Keyword:</label> <input type="text" name="kw">
->>>>>>> 903b50cf307122bef2ab1bc2e8964b0fa4c8e69b
-	<input type="submit" value="Search">
-	</form>
+	
+	
 </div>
 
 
