@@ -1,6 +1,7 @@
 package com.skilldistillery.film.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -68,6 +69,35 @@ public class FilmController {
 		mv.setViewName("WEB-INF/views/results.jsp");
 		return mv;
 	}
+	
+	@RequestMapping(path = { "delete.do" }, method = RequestMethod.GET)
+	public ModelAndView deleteFilm(@RequestParam("deleteFilm") String toDeleteOrNot, @RequestParam("id") String id) {
+		
+		ModelAndView mv = new ModelAndView();
+		
+		if(toDeleteOrNot.toUpperCase().equals("YES")) {
+			
+			boolean success = filmdao.deleteFilm( filmdao.findFilmById(Integer.valueOf(id)) );
+			
+			if (success) {
+				mv.addObject("message", "Your film has been sucessfully deleted." );
+				mv.setViewName("WEB-INF/views/message.jsp");
+				return mv;
+			}
+			
+			mv.addObject("message", "Error: We weren't able to remove the movie.  Popcorn on us?" );
+			mv.setViewName("WEB-INF/views/NoResults.jsp");
+			return mv;
+		}
+		else {
+			
+			mv.setViewName("WEB-INF/views/index.jsp");
+			return mv;
+		}
+		
+		
+	}
+	
 //	@RequestMap
 //	@RequestMapping("GetNumbers.do")
 //	  public ModelAndView getNumbers(@RequestParam(value="howmany", defaultValue="6") int count, HttpSession session) {
