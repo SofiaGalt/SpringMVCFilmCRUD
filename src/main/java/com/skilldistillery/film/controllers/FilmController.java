@@ -43,7 +43,8 @@ public class FilmController {
 		ModelAndView mv = new ModelAndView();
 		List<Film> film = filmdao.findFilmByKeyword(kw);
 		if (film == null) {
-			mv.addObject("message", "We weren't able to find any movies matching your request.  Maybe try fewer words or different phrases." );
+			mv.addObject("message",
+					"We weren't able to find any movies matching your request.  Maybe try fewer words or different phrases.");
 			mv.setViewName("WEB-INF/views/NoResults.jsp");
 			return mv;
 		}
@@ -51,72 +52,97 @@ public class FilmController {
 		mv.setViewName("WEB-INF/views/results.jsp");
 		return mv;
 	}
-	
+
 	@RequestMapping(path = { "addFilm.do" }, method = RequestMethod.GET)
 	public ModelAndView addFilm(Film film) {
-		
+
 		ModelAndView mv = new ModelAndView();
-		
+
 		Film f = filmdao.createFilm(film);
-		
+
 		if (f == null) {
-			mv.addObject("message", "Error: We weren't able to add your movie.  Popcorn on us?" );
+			mv.addObject("message", "Error: We weren't able to add your movie.  Popcorn on us?");
 			mv.setViewName("WEB-INF/views/NoResults.jsp");
 			return mv;
 		}
-		
+
 		mv.addObject("film", film);
 		mv.setViewName("WEB-INF/views/results.jsp");
 		return mv;
 	}
-	
+
 	@RequestMapping(path = { "delete.do" }, method = RequestMethod.GET)
 	public ModelAndView deleteFilm(@RequestParam("deleteFilm") String toDeleteOrNot, @RequestParam("id") String id) {
-		
+
 		ModelAndView mv = new ModelAndView();
-		
-		if(toDeleteOrNot.toUpperCase().equals("YES")) {
-			
-			boolean success = filmdao.deleteFilm( filmdao.findFilmById(Integer.valueOf(id)) );
-			
+
+		if (toDeleteOrNot.toUpperCase().equals("YES")) {
+
+			boolean success = filmdao.deleteFilm(filmdao.findFilmById(Integer.valueOf(id)));
+
 			if (success) {
-				mv.addObject("message", "Your film has been sucessfully deleted." );
+				mv.addObject("message", "Your film has been sucessfully deleted.");
 				mv.setViewName("WEB-INF/views/message.jsp");
 				return mv;
+			} else {
+				mv.addObject("message", "Error: We weren't able to remove the movie.  Popcorn on us?");
+				mv.setViewName("WEB-INF/views/NoResults.jsp");
+				return mv;
 			}
-			
-			mv.addObject("message", "Error: We weren't able to remove the movie.  Popcorn on us?" );
-			mv.setViewName("WEB-INF/views/NoResults.jsp");
-			return mv;
-		}
-		else {
-			
+		} else {
+
 			mv.setViewName("WEB-INF/views/index.jsp");
 			return mv;
 		}
-		
-		
+
+	}
+
+	@RequestMapping(path = { "edit.do" }, method = RequestMethod.GET)
+	public ModelAndView editFilm(@RequestParam("editFilm") String toEditOrNot, @RequestParam("id") String id) {
+
+		ModelAndView mv = new ModelAndView();
+
+		if (toEditOrNot.toUpperCase().equals("YES")) {
+
+			Film toEdit = filmdao.findFilmById(Integer.valueOf(id));
+
+			if (toEdit != null) {
+				mv.addObject("film", toEdit);
+				mv.setViewName("WEB-INF/views/editMovie.jsp");
+				return mv;
+			} else {
+				mv.addObject("message", "Error: We had an issue trying to edit that movie.  It's possible that it's been deleted.");
+				mv.setViewName("WEB-INF/views/NoResults.jsp");
+				return mv;
+			}
+		} else {
+
+			mv.setViewName("WEB-INF/views/index.jsp");
+			return mv;
+		}
+
 	}
 	
-//	@RequestMap
-//	@RequestMapping("GetNumbers.do")
-//	  public ModelAndView getNumbers(@RequestParam(value="howmany", defaultValue="6") int count, HttpSession session) {
-//	    hopper.reset();
-//	    List<String> nums = new ArrayList<>();
-//	    for (int i = 0; i < count; i++) {
-//	      nums.add(hopper.drawBall().getValue());
-//	    }
-//	    ModelAndView mv = new ModelAndView();
-//	    mv.addObject("listOfNumbers", nums);
-//	    // Check in session for history - session.getAttribute(key)
-//	    List< List<String> > history = (List< List<String> >) session.getAttribute("lottoHistory");
-//	    if(history == null) {
-//	      history = new ArrayList<>();
-//	      // Put history in session - session.setAttribute(key, value)
-//	      session.setAttribute("lottoHistory", history);
-//	    }
-//	    history.add(nums);
-//	    mv.setViewName("WEB-INF/form.jsp");
-//	    return mv;
-//	  }
+	@RequestMapping(path = { "updateFilm.do" }, method = RequestMethod.GET)
+	public ModelAndView updateFilm(Film film) {
+
+		ModelAndView mv = new ModelAndView();
+
+		boolean success = filmdao.saveFilm(film);
+		
+		if(success) {
+			
+			mv.addObject("message", "Your film has been updated.");
+			mv.addObject("film", film);
+			mv.setViewName("WEB-INF/views/results.jsp");
+			return mv;
+		}
+		else {
+			mv.addObject("message", "Error: there was an issue updating the film.");
+			mv.setViewName("WEB-INF/views/NoResults.jsp");
+			return mv;
+		}
+
+	}
+
 }
