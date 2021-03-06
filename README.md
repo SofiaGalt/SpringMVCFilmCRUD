@@ -6,3 +6,5 @@
 ## Class Structure
 
 ## How to run
+
+## Technologies used
