@@ -20,9 +20,9 @@
 </div>
 <!-- Find by Party -->
 <div>
-	<h3>Search by party:</h3>
-	<form action="presidentInfo" method="get">
-	<label for="party">Party:</label> <input type="text" name="party">
+	<h3>Search by :</h3>
+	<form action=searchKeyWord.do" method="get">
+	<label for="keyword">Keyword:</label> <input type="text" name="keyword">
 	<input type="submit" value="Search">
 	</form>
 </div>
