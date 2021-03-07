@@ -3,6 +3,7 @@ package com.skilldistillery.film.dao;
 import java.util.List;
 
 import com.skilldistillery.film.entities.Actor;
+import com.skilldistillery.film.entities.Category;
 import com.skilldistillery.film.entities.Film;
 
 public interface FilmDAO {
@@ -17,5 +18,6 @@ public interface FilmDAO {
 	public Film createFilm(Film film);
 	public boolean saveFilm(Film film);
 	public boolean deleteFilm(Film film);
+	public List<Category> findCategoryByFilmId(int filmId);
 	
 }

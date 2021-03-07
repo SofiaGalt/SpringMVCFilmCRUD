@@ -37,7 +37,7 @@
 				<label for="replacementCost">Replacement Cost:</label> <input type="number" name="replacementCost"> 
 				<label for="rating">Rating:</label> <input type="text" name="rating">
 				<label for="specialFeatures">Special Features:</label> <input type="text" name="specialFeatures"> 
-				<input type="submit" value="Search">
+				<input type="submit" value="Submit">
 			</form>
 		</div>
 	

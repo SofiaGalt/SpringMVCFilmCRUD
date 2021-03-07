@@ -12,6 +12,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.skilldistillery.film.entities.Actor;
+import com.skilldistillery.film.entities.Category;
 import com.skilldistillery.film.entities.Film;
 import com.skilldistillery.film.entities.Rating;
 
@@ -52,7 +53,7 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 
 				return new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
 						rs.getInt(6), rs.getDouble(7), rs.getInt(8), rs.getDouble(9), Rating.valueOf(rs.getString(10)),
-						rs.getString(11), findActorsByFilmId(filmId), rs.getString("language.name"));
+						rs.getString(11), findActorsByFilmId(filmId), rs.getString("language.name"), findCategoryByFilmId(rs.getInt(1)));
 			}
 
 		} catch (SQLException e) {
@@ -113,6 +114,33 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 
 		return null;
 	}
+	
+	@Override
+	public List<Category> findCategoryByFilmId(int filmId) {
+		
+		if (filmId < 1)
+			return null;
+		
+		try (Connection conn = DriverManager.getConnection(URL, user, pass)) {
+			String sql = "select * from film join film_category on film.id = film_category.film_id join category on film_category.category_id = category.id where film.id = ?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, filmId);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			List<Category> categories = new LinkedList<>();
+			while (rs.next()) {
+				
+				categories.add(new Category(rs.getInt("category.id"), rs.getString("category.name")));
+			}
+			
+			return categories;
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		
+		return null;
+	}
 
 	public List<Film> findFilmByKeyword(String keyword) {
 
@@ -130,7 +158,7 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 				filmsMatchedKeyword.add(new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
 						rs.getInt(5), rs.getInt(6), rs.getDouble(7), rs.getInt(8), rs.getDouble(9),
 						Rating.valueOf(rs.getString(10)), rs.getString(11), findActorsByFilmId(rs.getInt(1)),
-						rs.getString("language.name")));
+						rs.getString("language.name"), findCategoryByFilmId(rs.getInt(1))));
 			}
 
 			return filmsMatchedKeyword;

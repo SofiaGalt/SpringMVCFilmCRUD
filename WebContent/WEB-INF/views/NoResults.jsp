@@ -7,7 +7,7 @@
 <title>No Results Found</title>
 </head>
 <body>
-<h1>${message }</h1>
+<h1>No Results Found</h1>
 
 </body>
 </html>

@@ -20,6 +20,7 @@ public class Film {
 	private String language;
 	
 	private List<Actor> cast;
+	private List<Category> categories;
 	
 	public Film() {}
 	
@@ -29,7 +30,7 @@ public class Film {
 	}
 
 	public Film(int id, String title, String description, String releaseYear, int languageId, int rentalDuration,
-			double rentalRate, Integer length, double replacementCost, Rating rating, String specialFeatures, List<Actor> cast, String language) {
+			double rentalRate, Integer length, double replacementCost, Rating rating, String specialFeatures, List<Actor> cast, String language, List<Category> categories) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -44,6 +45,7 @@ public class Film {
 		this.specialFeatures = specialFeatures;
 		this.cast = cast;
 		this.language = language;
+		this.categories = categories;
 	}
 
 	public String getLanguage() {
@@ -215,9 +217,17 @@ public class Film {
 	public List<Actor> getCast() {
 		return cast;
 	}
+	
+	public List<Category> getCategories() {
+		return categories;
+	}
 
 	public void setCast(List<Actor> cast) {
 		this.cast = cast;
+	}
+	
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
 	}
 	
 	

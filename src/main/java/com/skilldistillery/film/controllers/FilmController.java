@@ -1,5 +1,6 @@
 package com.skilldistillery.film.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.skilldistillery.film.dao.FilmDAO;
+import com.skilldistillery.film.entities.Actor;
 import com.skilldistillery.film.entities.Film;
 
 @Controller
@@ -29,11 +31,13 @@ public class FilmController {
 		ModelAndView mv = new ModelAndView();
 		Integer integerId = new Integer(id);
 		Film film = filmdao.findFilmById(integerId);
+		List<Film> films = new ArrayList<Film>();
+		films.add(film);
 		if (film == null) {
 			mv.setViewName("WEB-INF/views/NoResults.jsp");
 			return mv;
 		}
-		mv.addObject("film", film);
+		mv.addObject("films", films);
 		mv.setViewName("WEB-INF/views/results.jsp");
 		return mv;
 	}
@@ -41,14 +45,15 @@ public class FilmController {
 	@RequestMapping(path = { "findFilmByKeyword.do" }, method = RequestMethod.GET)
 	public ModelAndView findFilmByKeyword(@RequestParam("kw") String kw) {
 		ModelAndView mv = new ModelAndView();
-		List<Film> film = filmdao.findFilmByKeyword(kw);
-		if (film == null) {
+		List<Film> films = filmdao.findFilmByKeyword(kw);
+		if (films == null) {
 			mv.addObject("message",
 					"We weren't able to find any movies matching your request.  Maybe try fewer words or different phrases.");
 			mv.setViewName("WEB-INF/views/NoResults.jsp");
 			return mv;
 		}
-		mv.addObject("film", film);
+		mv.addObject("films", films);
+
 		mv.setViewName("WEB-INF/views/results.jsp");
 		return mv;
 	}
@@ -72,13 +77,14 @@ public class FilmController {
 	}
 
 	@RequestMapping(path = { "delete.do" }, method = RequestMethod.GET)
-	public ModelAndView deleteFilm(@RequestParam("deleteFilm") String toDeleteOrNot, @RequestParam("id") String id) {
+	public ModelAndView deleteFilm(@RequestParam("deleteFilm") String toDeleteOrNot, @RequestParam("id") Integer id) {
 
 		ModelAndView mv = new ModelAndView();
+		System.out.println(id);
 
 		if (toDeleteOrNot.toUpperCase().equals("YES")) {
 
-			boolean success = filmdao.deleteFilm(filmdao.findFilmById(Integer.valueOf(id)));
+			boolean success = filmdao.deleteFilm(filmdao.findFilmById(id));
 
 			if (success) {
 				mv.addObject("message", "Your film has been sucessfully deleted.");
