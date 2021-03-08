@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class Film {
-	
+
 	private int id;
 	private String title;
 	private String description;
-	private String releaseYear;
-	
+	private Integer releaseYear;
+
 	private int languageId;
 	private int rentalDuration;
 	private double rentalRate;
@@ -18,18 +18,22 @@ public class Film {
 	private Rating rating;
 	private String specialFeatures;
 	private String language;
-	
+	private String category;
+
+
 	private List<Actor> cast;
-	
-	public Film() {}
-	
+
+	public Film() {
+	}
+
 	public Film(String title) {
 		super();
 		this.title = title;
 	}
 
-	public Film(int id, String title, String description, String releaseYear, int languageId, int rentalDuration,
-			double rentalRate, Integer length, double replacementCost, Rating rating, String specialFeatures, List<Actor> cast, String language) {
+	public Film(int id, String title, String description, Integer releaseYear, int languageId, int rentalDuration,
+			double rentalRate, Integer length, double replacementCost, Rating rating, String specialFeatures,
+			List<Actor> cast, String language, String category) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -44,6 +48,7 @@ public class Film {
 		this.specialFeatures = specialFeatures;
 		this.cast = cast;
 		this.language = language;
+		this.category = category;
 	}
 
 	public String getLanguage() {
@@ -124,11 +129,11 @@ public class Film {
 		this.description = description;
 	}
 
-	public String getReleaseYear() {
+	public Integer getReleaseYear() {
 		return releaseYear;
 	}
 
-	public void setReleaseYear(String releaseYear) {
+	public void setReleaseYear(Integer releaseYear) {
 		this.releaseYear = releaseYear;
 	}
 
@@ -177,31 +182,32 @@ public class Film {
 	}
 
 	public void setRating(String rating) {
-		
+
 		rating.toUpperCase();
-		
-		switch(rating) {
-			case "G":
-				this.rating = Rating.G;
-				break;
-			case "PG":
-				this.rating = Rating.PG;
-				break;
-			case "PG13":
-			case "PG-13":
-			case "PG 13":
-				this.rating = Rating.PG13;
-				break;
-			case "R":
-				this.rating = Rating.R;
-				break;
-			case "NC17":
-			case "NC-17":
-			case "NC 17":
-				this.rating = Rating.NC17;
-				break;
+
+		switch (rating) {
+		case "G":
+			this.rating = Rating.G;
+			break;
+		case "PG":
+			this.rating = Rating.PG;
+			break;
+		case "PG13":
+		case "PG-13":
+		case "PG 13":
+			this.rating = Rating.PG13;
+			break;
+		case "R":
+			this.rating = Rating.R;
+			break;
+		case "NC17":
+		case "NC-17":
+		case "NC 17":
+			this.rating = Rating.NC17;
+			break;
+		default:
+			this.rating = Rating.R;
 		}
-		
 	}
 
 	public String getSpecialFeatures() {
@@ -220,5 +226,12 @@ public class Film {
 		this.cast = cast;
 	}
 	
-	
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 }

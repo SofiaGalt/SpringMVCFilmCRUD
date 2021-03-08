@@ -34,21 +34,21 @@ public class FilmController {
 			return mv;
 		}
 		mv.addObject("film", film);
-		mv.setViewName("WEB-INF/views/results.jsp");
+		mv.setViewName("WEB-INF/views/result.jsp");
 		return mv;
 	}
 
 	@RequestMapping(path = { "findFilmByKeyword.do" }, method = RequestMethod.GET)
-	public ModelAndView findFilmByKeyword(@RequestParam("kw") String kw) {
+	public ModelAndView findFilmsByKeyword(@RequestParam("kw") String kw) {
 		ModelAndView mv = new ModelAndView();
-		List<Film> film = filmdao.findFilmByKeyword(kw);
-		if (film == null) {
+		List<Film> films = filmdao.findFilmByKeyword(kw);
+		if (films == null || films.size() == 0) {
 			mv.addObject("message",
 					"We weren't able to find any movies matching your request.  Maybe try fewer words or different phrases.");
 			mv.setViewName("WEB-INF/views/NoResults.jsp");
 			return mv;
 		}
-		mv.addObject("film", film);
+		mv.addObject("films", films);
 		mv.setViewName("WEB-INF/views/results.jsp");
 		return mv;
 	}
@@ -67,7 +67,7 @@ public class FilmController {
 		}
 
 		mv.addObject("film", film);
-		mv.setViewName("WEB-INF/views/results.jsp");
+		mv.setViewName("WEB-INF/views/result.jsp");
 		return mv;
 	}
 
@@ -134,7 +134,7 @@ public class FilmController {
 			
 			mv.addObject("message", "Your film has been updated.");
 			mv.addObject("film", film);
-			mv.setViewName("WEB-INF/views/results.jsp");
+			mv.setViewName("WEB-INF/views/result.jsp");
 			return mv;
 		}
 		else {

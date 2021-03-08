@@ -49,10 +49,13 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-
-				return new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
-						rs.getInt(6), rs.getDouble(7), rs.getInt(8), rs.getDouble(9), Rating.valueOf(rs.getString(10)),
-						rs.getString(11), findActorsByFilmId(filmId), rs.getString("language.name"));
+				
+				Film toReturn = new Film(rs.getInt("id"), rs.getString("title"), rs.getString("description"), rs.getInt("release_year"), rs.getInt("language_id"),
+						rs.getInt("rental_duration"), rs.getDouble(7), rs.getInt(8), rs.getDouble(9), Rating.valueOf(rs.getString(10)),
+						rs.getString(11), findActorsByFilmId(filmId), rs.getString("language.name"), getCategory(rs.getInt("id")));
+				
+				System.out.println(toReturn +" ******************************************* to found by id");
+				return toReturn;
 			}
 
 		} catch (SQLException e) {
@@ -119,7 +122,7 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 		List<Film> filmsMatchedKeyword = new LinkedList<>();
 
 		try (Connection conn = DriverManager.getConnection(URL, user, pass)) {
-			String sql = "select * from film join language on film.language_id = language.id where film.title like ? or film.description like ?;";
+			String sql = "select * from film join language on film.language_id = language.id where film.title like ? or film.description like ?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, "%" + keyword + "%");
 			ps.setString(2, "%" + keyword + "%");
@@ -127,16 +130,16 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 			ResultSet rs = ps.executeQuery();
 
 			while (rs.next()) {
-				filmsMatchedKeyword.add(new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
+				filmsMatchedKeyword.add(new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4),
 						rs.getInt(5), rs.getInt(6), rs.getDouble(7), rs.getInt(8), rs.getDouble(9),
 						Rating.valueOf(rs.getString(10)), rs.getString(11), findActorsByFilmId(rs.getInt(1)),
-						rs.getString("language.name")));
+						rs.getString("language.name"), getCategory(rs.getInt("id"))));
 			}
 
 			return filmsMatchedKeyword;
 
 		} catch (SQLException e) {
-			System.out.println(e + "from findFilmByKeyword!!!!!!!!!!!!!!!!!!!!!");
+			
 
 		}
 
@@ -278,21 +281,34 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 	}
 	
 	public boolean saveFilm(Film film) {
+		System.out.println("within save **********************************************************************\n***********************************************************");
 
 		try (Connection conn = DriverManager.getConnection(URL, user, pass)) {
 
 			conn.setAutoCommit(false); // START TRANSACTION
 			
-			String sql = "UPDATE film SET title=?, rating=? , description=? " + " WHERE id=?";
+			String sql = "UPDATE film SET title=?, rating=? , description=?, release_year=?, language_id=?, rental_duration=?, rental_rate=?, length=?, replacement_cost=?, special_features=? WHERE id=?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			
 			stmt.setString(1, film.getTitle());
 			stmt.setString(2, film.getRating());
 			stmt.setString(3, film.getDescription());
-			stmt.setInt(4, film.getId());
+			stmt.setInt(4, film.getReleaseYear());
+			stmt.setInt(5, film.getLanguageId());
+			stmt.setInt(6, film.getRentalDuration());
+			stmt.setDouble(7, film.getRentalRate());
+			stmt.setInt(8, film.getLength());
+			stmt.setDouble(9, film.getReplacementCost());
+			stmt.setString(10, film.getSpecialFeatures());
+			System.out.println(film.getId() + "ID ID ID **********************************************************************\n***********************************************************");
+			System.out.println(film + " !!!!Film!!!! **********************************************************************\n***********************************************************");
+			stmt.setInt(11, film.getId());
+			System.out.println(stmt + "stmt **********************************************************************\n***********************************************************");
 			
 			int updateCount = stmt.executeUpdate();
+			System.out.println( updateCount + "within save **********************************************************************\n***********************************************************");
 			if (updateCount == 1) {
+				System.out.println("update count = 1 **********************************************************************\n***********************************************************");
 				// Replace actor's film list
 				sql = "DELETE FROM film_actor WHERE film_id = ?";
 				stmt = conn.prepareStatement(sql);
@@ -302,11 +318,16 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 				stmt = conn.prepareStatement(sql);
 				stmt.setInt(1, film.getId());
 				
-				for (Actor actor : film.getCast()) {
-					
-					stmt.setInt(2, actor.getId());
-					updateCount = stmt.executeUpdate();
+				List<Actor> cast = film.getCast();
+				
+				if(cast != null && cast.size() != 0) {
+					for (Actor actor : film.getCast()) {
+						
+						stmt.setInt(2, actor.getId());
+						updateCount = stmt.executeUpdate();
+					}
 				}
+				System.out.println("pre commit **********************************************************************\n***********************************************************");
 				conn.commit(); // COMMIT TRANSACTION
 			}
 		} catch (SQLException sqle) {
@@ -344,5 +365,29 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 		}
 		return true;
 	}
+	
+	private String getCategory(int filmId) {
+		
+		try (Connection conn = DriverManager.getConnection(URL, user, pass)) {
+			
+			conn.setAutoCommit(false); // START TRANSACTION
+			
+			String sql = "select category.name from film join film_category on film.id = film_category.film_id join category on film_category.category_id = category.id where film.id = ?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, filmId);
 
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) {
+				
+				return rs.getString(1);
+			}
+
+			
+		} catch (SQLException e) {
+			System.out.println(e);
+			return null;
+		}
+		return null;
+	}
 }
