@@ -22,18 +22,18 @@ public class Film {
 
 
 	private List<Actor> cast;
-
-	public Film() {
-	}
-
+	
+	public Film() {}
+	
 	public Film(String title) {
 		super();
 		this.title = title;
 	}
 
+
 	public Film(int id, String title, String description, Integer releaseYear, int languageId, int rentalDuration,
-			double rentalRate, Integer length, double replacementCost, Rating rating, String specialFeatures,
-			List<Actor> cast, String language, String category) {
+			double rentalRate, Integer length, double replacementCost, String rating, String specialFeatures, List<Actor> cast, String language, String category) {
+
 		super();
 		this.id = id;
 		this.title = title;
@@ -44,11 +44,12 @@ public class Film {
 		this.rentalRate = rentalRate;
 		this.length = length;
 		this.replacementCost = replacementCost;
-		this.rating = rating;
+		setRating(rating);
 		this.specialFeatures = specialFeatures;
 		this.cast = cast;
 		this.language = language;
 		this.category = category;
+
 	}
 
 	public String getLanguage() {
@@ -226,6 +227,7 @@ public class Film {
 		this.cast = cast;
 	}
 	
+
 	public String getCategory() {
 		return category;
 	}
@@ -233,5 +235,4 @@ public class Film {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-
 }

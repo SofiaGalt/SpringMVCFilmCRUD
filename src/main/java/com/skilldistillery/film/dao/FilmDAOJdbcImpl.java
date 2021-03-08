@@ -49,13 +49,10 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				
-				Film toReturn = new Film(rs.getInt("id"), rs.getString("title"), rs.getString("description"), rs.getInt("release_year"), rs.getInt("language_id"),
-						rs.getInt("rental_duration"), rs.getDouble(7), rs.getInt(8), rs.getDouble(9), Rating.valueOf(rs.getString(10)),
-						rs.getString(11), findActorsByFilmId(filmId), rs.getString("language.name"), getCategory(rs.getInt("id")));
-				
-				System.out.println(toReturn +" ******************************************* to found by id");
-				return toReturn;
+
+				return new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5),
+						rs.getInt(6), rs.getDouble(7), rs.getInt(8), rs.getDouble(9), rs.getString(10),
+						rs.getString(11), findActorsByFilmId(rs.getInt(1)),  rs.getString("language.name"), getCategory(rs.getInt(1)));
 			}
 
 		} catch (SQLException e) {
@@ -132,8 +129,10 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 			while (rs.next()) {
 				filmsMatchedKeyword.add(new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4),
 						rs.getInt(5), rs.getInt(6), rs.getDouble(7), rs.getInt(8), rs.getDouble(9),
-						Rating.valueOf(rs.getString(10)), rs.getString(11), findActorsByFilmId(rs.getInt(1)),
+						rs.getString(10), rs.getString(11), findActorsByFilmId(rs.getInt(1)),
+
 						rs.getString("language.name"), getCategory(rs.getInt("id"))));
+
 			}
 
 			return filmsMatchedKeyword;
