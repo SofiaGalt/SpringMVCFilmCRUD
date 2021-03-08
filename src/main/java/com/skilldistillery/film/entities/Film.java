@@ -18,7 +18,7 @@ public class Film {
 	private Rating rating;
 	private String specialFeatures;
 	private String language;
-	private String category;
+	private List<String> category;
 
 
 	private List<Actor> cast;
@@ -32,7 +32,7 @@ public class Film {
 
 
 	public Film(int id, String title, String description, Integer releaseYear, int languageId, int rentalDuration,
-			double rentalRate, Integer length, double replacementCost, String rating, String specialFeatures, List<Actor> cast, String language, String category) {
+			double rentalRate, Integer length, double replacementCost, String rating, String specialFeatures, List<Actor> cast, String language, List<String> category) {
 
 		super();
 		this.id = id;
@@ -228,11 +228,11 @@ public class Film {
 	}
 	
 
-	public String getCategory() {
+	public List<String> getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(List<String> category) {
 		this.category = category;
 	}
 }

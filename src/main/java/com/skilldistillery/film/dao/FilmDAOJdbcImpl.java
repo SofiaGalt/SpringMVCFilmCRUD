@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import com.skilldistillery.film.entities.Actor;
 import com.skilldistillery.film.entities.Film;
-import com.skilldistillery.film.entities.Rating;
 
 
 @Component
@@ -280,7 +280,6 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 	}
 	
 	public boolean saveFilm(Film film) {
-		System.out.println("within save **********************************************************************\n***********************************************************");
 
 		try (Connection conn = DriverManager.getConnection(URL, user, pass)) {
 
@@ -299,15 +298,12 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 			stmt.setInt(8, film.getLength());
 			stmt.setDouble(9, film.getReplacementCost());
 			stmt.setString(10, film.getSpecialFeatures());
-			System.out.println(film.getId() + "ID ID ID **********************************************************************\n***********************************************************");
-			System.out.println(film + " !!!!Film!!!! **********************************************************************\n***********************************************************");
 			stmt.setInt(11, film.getId());
-			System.out.println(stmt + "stmt **********************************************************************\n***********************************************************");
 			
 			int updateCount = stmt.executeUpdate();
-			System.out.println( updateCount + "within save **********************************************************************\n***********************************************************");
+			
 			if (updateCount == 1) {
-				System.out.println("update count = 1 **********************************************************************\n***********************************************************");
+				
 				// Replace actor's film list
 				sql = "DELETE FROM film_actor WHERE film_id = ?";
 				stmt = conn.prepareStatement(sql);
@@ -326,7 +322,7 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 						updateCount = stmt.executeUpdate();
 					}
 				}
-				System.out.println("pre commit **********************************************************************\n***********************************************************");
+				
 				conn.commit(); // COMMIT TRANSACTION
 			}
 		} catch (SQLException sqle) {
@@ -365,7 +361,7 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 		return true;
 	}
 	
-	private String getCategory(int filmId) {
+	private List<String> getCategory(int filmId) {
 		
 		try (Connection conn = DriverManager.getConnection(URL, user, pass)) {
 			
@@ -377,16 +373,16 @@ public class FilmDAOJdbcImpl implements FilmDAO {
 
 			ResultSet rs = ps.executeQuery();
 
-			if (rs.next()) {
+			List<String> categories = new ArrayList<>();
+			while (rs.next()) {
 				
-				return rs.getString(1);
+				categories.add(rs.getString(1));
 			}
 
-			
+			return categories;
 		} catch (SQLException e) {
 			System.out.println(e);
 			return null;
 		}
-		return null;
 	}
 }
